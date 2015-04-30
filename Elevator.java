@@ -15,6 +15,9 @@ public class Elevator {
     //status of movement of elevator up, down or stopped
     private SignalStatus directionStatus;
     
+    //statud of doors open or closed
+    private DoorStatus doorStatus;
+    
     //static member to keep track of floors moved
     private static int floorsMoved;
     
@@ -34,8 +37,10 @@ public class Elevator {
         this.directionStatus = SignalStatus.Stopped;
         this.floorsMoved = 0;
         this.trips = 0;
+        this.doorStatus = DoorStatus.Closed;
     }
-
+    
+    //public getters
     public int getCurFloor() {
         return curFloor;
     }
@@ -43,6 +48,50 @@ public class Elevator {
     public SignalStatus getDirectionStatus() {
         return directionStatus;
     }
+
+    public DoorStatus getDoorStatus() {
+        return doorStatus;
+    }
+
+    //private setters
+    private void setCurFloor(int curFloor) {
+        this.curFloor = curFloor;
+    }
+
+    private void setDirectionStatus(SignalStatus directionStatus) {
+        this.directionStatus = directionStatus;
+    }
+
+    private void setDoorStatus(DoorStatus doorStatus) {
+        this.doorStatus = doorStatus;
+    }
+
+    private static void setFloorsMoved(int floorsMoved) {
+        Elevator.floorsMoved = floorsMoved;
+    }
+
+    private static void setTrips(double trips) {
+        Elevator.trips = trips;
+    }
+
+    private void setFloorsInBuilding(int floorsInBuilding) {
+        this.floorsInBuilding = floorsInBuilding;
+    }
     
+    public void moveElevator(int floor){
+    
+        if(floor <= this.floorsInBuilding && floor >= 0){
+            if(floor == this.curFloor){
+                setDoorStatus(DoorStatus.Open);
+            }else{
+                if(floor > this.curFloor){
+                    setDirectionStatus(SignalStatus.UP);
+                    setDoorStatus(DoorStatus.Closed);
+                    this.floorsMoved += floor-this.curFloor;
+                    
+                }
+            }
+        }
+    }
     
 }
