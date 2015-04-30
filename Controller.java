@@ -23,6 +23,9 @@ public class Controller {
     //Array of request objects (1 for each floor)
     private Request[] requests;
     
+    //Request Stions to add to Controller
+    private Request request;
+    
     //Queue to track call requests
     private Queue<Request> callQueue;
 
@@ -45,7 +48,7 @@ public class Controller {
     private void populateElevators(){
     
         for(int i = 0; i < elevators.length; i++){
-            elevator = new Elevator();
+            elevator = new Elevator(requests.length);
             elevators[i] = elevator;
         }
     }
@@ -56,7 +59,8 @@ public class Controller {
     private void populateRequestStations(){
     
         for(int i = 0; i < requests.length; i++){
-            
+            request = new Request(i);
+            requests[i] = request;
         }
     }
 }
