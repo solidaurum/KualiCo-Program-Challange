@@ -15,15 +15,18 @@ public class Elevator {
     //status of movement of elevator up, down or stopped
     private SignalStatus directionStatus;
     
-    //statud of doors open or closed
+    //status of doors open or closed
     private DoorStatus doorStatus;
     
-    //static member to keep track of floors moved
-    private static int floorsMoved;
+    //status of maintenance need
+    private Maintenance maintenance;
     
-    //static member to keep track of trips made
+    // member to keep track of floors moved
+    private int floorsMoved;
+    
+    //member to keep track of trips made
     //trips = floorsMoved/(2*floorsInBuilding)
-    private static double trips;
+    private double trips;
     
     //int defining number of floors in building
     private int floorsInBuilding;
@@ -38,6 +41,7 @@ public class Elevator {
         this.floorsMoved = 0;
         this.trips = 0;
         this.doorStatus = DoorStatus.Closed;
+        this.maintenance = Maintenance.Functional;
     }
     
     //public getters
@@ -53,6 +57,14 @@ public class Elevator {
         return doorStatus;
     }
 
+    public int getFloorsMoved(){
+        return this.floorsMoved;
+    }
+
+    public Maintenance getMaintenance() {
+        return maintenance;
+    }
+    
     //private setters
     private void setCurFloor(int curFloor) {
         this.curFloor = curFloor;
@@ -66,16 +78,20 @@ public class Elevator {
         this.doorStatus = doorStatus;
     }
 
-    private static void setFloorsMoved(int floorsMoved) {
-        Elevator.floorsMoved = floorsMoved;
+    private void setFloorsMoved(int floorsMoved) {
+        this.floorsMoved = floorsMoved;
     }
 
-    private static void setTrips(double trips) {
-        Elevator.trips = trips;
+    private void setTrips(double trips) {
+        this.trips = trips;
     }
 
     private void setFloorsInBuilding(int floorsInBuilding) {
         this.floorsInBuilding = floorsInBuilding;
+    }
+
+    private void setMaintenance(Maintenance maintenance) {
+        this.maintenance = maintenance;
     }
     
     public void moveElevator(int floor){
@@ -87,10 +103,26 @@ public class Elevator {
                 if(floor > this.curFloor){
                     setDirectionStatus(SignalStatus.UP);
                     setDoorStatus(DoorStatus.Closed);
-                    this.floorsMoved += floor-this.curFloor;
-                    
+                    for(int i = 0; i < (floor-this.curFloor); i++){
+                        this.floorsMoved++;
+                        checkLimit();
+                        if(this.maintenance == Maintenance.OutOfOrder){
+                            setDirectionStatus(SignalStatus.Stopped);
+                            setDoorStatus(doorStatus.Open);
+                            sendSignal();
+                            break;
+                        }
+                    }
+                    setDoorStatus(DoorStatus.Open);
                 }
             }
+        }
+    }
+    
+    private void checkLimit(){
+        setTrips(this.floorsMoved/(this.floorsInBuilding * 2));//round trip two times total number of floors
+        if(this.trips >= 100){
+            setMaintenance(Maintenance.OutOfOrder);
         }
     }
     
