@@ -40,6 +40,7 @@ public class Controller {
         requests = new Request[buildingFloors];
         populateElevators();
         populateRequestStations();
+        listenForCall();
     }
     
     /*
@@ -63,4 +64,19 @@ public class Controller {
             requests[i] = request;
         }
     }
+    
+    private void listenForCall(){
+        /*
+         * if call takes place:
+         * find closest functional elevator with for loop through elevators
+         * move closest elevator to call floor
+         * Open elevator door
+         * close elevator door
+         * move elevator to selected floor
+         * open elevator door
+         * close elevator door
+         * 
+         */
+    }
+    
 }

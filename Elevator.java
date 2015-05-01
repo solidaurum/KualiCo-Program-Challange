@@ -94,8 +94,9 @@ public class Elevator {
         this.maintenance = maintenance;
     }
     
-    public void moveElevator(int floor){
+    public String moveElevator(int floor){
     
+        String message;
         if(floor <= this.floorsInBuilding && floor >= 0){
             if(floor == this.curFloor){
                 setDoorStatus(DoorStatus.Open);
@@ -109,14 +110,17 @@ public class Elevator {
                         if(this.maintenance == Maintenance.OutOfOrder){
                             setDirectionStatus(SignalStatus.Stopped);
                             setDoorStatus(doorStatus.Open);
-                            sendSignal();
-                            break;
+                            message = "Fail";
+                            return message;
+                            
                         }
                     }
                     setDoorStatus(DoorStatus.Open);
                 }
             }
         }
+        message = "Success";
+        return message;
     }
     
     private void checkLimit(){
@@ -125,5 +129,6 @@ public class Elevator {
             setMaintenance(Maintenance.OutOfOrder);
         }
     }
+    
     
 }
